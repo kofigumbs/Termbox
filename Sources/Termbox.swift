@@ -51,10 +51,10 @@ public class Termbox {
     }
 
     /// Wait for an event forever.
-    public func poll() throws -> Event {
+    public func poll() -> Event {
         let cEvent = UnsafeMutablePointer<tb_event>.allocate(capacity: 1)
         let type = tb_poll_event(cEvent)
-        let event = try Event.from(
+        let event = Event.from(
            type: type,
            key:  cEvent.pointee.key,
            ch:   cEvent.pointee.ch,

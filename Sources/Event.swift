@@ -3,8 +3,7 @@ public enum Event {
     case key(Key)
     case resize(width: UInt, height: UInt)
     case mouse(Mouse, x: UInt, y: UInt)
-
-    struct FailedToPoll: Error {}
+    case error
 
     /*
      * TODO: Modifiers
@@ -12,22 +11,21 @@ public enum Event {
      *
      */
 
-    static func from(type: Int32, key: UInt16, ch: UInt32, w: Int32, h: Int32, x: Int32, y: Int32) throws -> Event {
-        switch type {
-        case 1:
-            return try .key(err(Key.from(key: key, ch: ch)))
-        case 2:
-            return .resize(width: UInt(w), height: UInt(h))
-        case 3:
-            return try .mouse(err(Mouse.from(key: key)), x: UInt(x), y: UInt(y))
-        default:
-            throw FailedToPoll()
+    static func from(type: Int32, key: UInt16, ch: UInt32, w: Int32, h: Int32, x: Int32, y: Int32) -> Event {
+        let parsed: () -> Event? = {
+            switch type {
+            case 1:
+                return Key.from(key: key, ch: ch).map { .key($0) }
+            case 2:
+                return .resize(width: UInt(w), height: UInt(h))
+            case 3:
+                return Mouse.from(key: key).map { .mouse($0, x: UInt(x), y: UInt(y)) }
+            default:
+                return nil
+            }
         }
-    }
 
-    private static func err<A>(_ maybe: A?) throws -> A {
-        guard let a = maybe else { throw FailedToPoll() }
-        return a
+        return parsed() ?? .error
     }
 
 }
