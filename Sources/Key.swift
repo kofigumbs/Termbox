@@ -2,7 +2,7 @@ public enum Key {
 
     case f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12,
         insert, delete, home, end, pageUp, pageDown,
-        arrowUp, arrowDown, arrowLeft, arrowRight,
+        arrowUp, arrowDown, arrowLeft, arrowRight, enter,
         unicode(UnicodeScalar)
 
     /*
@@ -63,6 +63,8 @@ public enum Key {
             return .arrowLeft
         case 0xFFFF-21:
             return .arrowRight
+        case 0x0D:
+            return .enter
         default:
             return UnicodeScalar(ch).map { .unicode($0) }
         }
