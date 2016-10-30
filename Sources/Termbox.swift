@@ -20,7 +20,7 @@ public class Termbox {
     /// Size of the internal back buffer (which is the same as
     /// terminal's window size in characters). The internal buffer can be resized
     /// after clear() or present() function calls.
-    var size: (width: UInt, height: UInt) {
+    public var size: (width: UInt, height: UInt) {
         return (width: UInt(tb_width()), height: UInt(tb_height()))
     }
 
